@@ -22,7 +22,7 @@ public class SpringBootCamelJpaApplication {
 	
 	@PostMapping("users")
 	public ResponseEntity<String> users(@RequestBody User user) throws InterruptedException{
-		log.info("User in Rest API received");
+		log.info("########## User in Rest API received #########");
 		Thread.sleep(4000);
 		log.info("User in Rest API received request body {}",user);
 		return ResponseEntity.status(500).body("Error");

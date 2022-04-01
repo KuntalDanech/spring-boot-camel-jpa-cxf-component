@@ -23,8 +23,9 @@ public class MyCamelRouter extends RouteBuilder {
 	public void configure() throws Exception {
 		
 		
-		onException(Exception.class).handled(true).process(exchange->{
-			log.info("Excaption has been caught ");
+		onException(Exception.class)
+		.process(exchange->{
+			log.info("********** Excaption has been caught ********");
 			var exception = exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
 			if(exception instanceof CxfOperationException) {
 				
@@ -36,7 +37,11 @@ public class MyCamelRouter extends RouteBuilder {
 				log.info("Message caught {}",message);
 				
 			}
-		});
+		})
+		.maximumRedeliveries(3)
+		.redeliveryDelay(3000)
+		.handled(true)
+		.end();
 		
 		from("{{my.camel.route}}").routeId("process_Id").log(LoggingLevel.INFO, "Processing")
 				.bean(MyCamelProcessor.class, "process").to("direct:myRoute");
